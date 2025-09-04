@@ -245,7 +245,8 @@ def _add_new_files_th(iter: ThreadSafeIterator[IncompleteFileInfo], config: Conf
         db_entry_bydvin = db.get_item(device_inode = (file_info_inc.device, file_info_inc.inode), return_index=True)
         if db_entry_bydvin is not None:
             db_entry_bydvin_idx, db_entry_bydvin = db_entry_bydvin
-        else: db_entry_bydvin_idx = -1
+        else:
+            db_entry_bydvin_idx = -1
 
         # Possible scenarios:
         # 1. File is in the database by path and inode, with same path: update its info if needed

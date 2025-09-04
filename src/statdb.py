@@ -297,14 +297,20 @@ class StatDB():
         with self._lock:
             try:
                 if return_index:
-                    if index is not ...: return self._get_item(index=index)
-                    if path is not ...: return self._get_item(path=path)
-                    if device_inode is not ...: return self._get_item(device_inode=device_inode)
+                    if index is not ...:
+                        return self._get_item(index=index)
+                    if path is not ...:
+                        return self._get_item(path=path)
+                    if device_inode is not ...:
+                        return self._get_item(device_inode=device_inode)
                     raise ValueError("One of index, path, or device_inode must be provided.")
                 else:
-                    if index is not ...: return self._get_item(index=index)[1]
-                    if path is not ...: return self._get_item(path=path)[1]
-                    if device_inode is not ...: return self._get_item(device_inode=device_inode)[1]
+                    if index is not ...:
+                        return self._get_item(index=index)[1]
+                    if path is not ...:
+                        return self._get_item(path=path)[1]
+                    if device_inode is not ...:
+                        return self._get_item(device_inode=device_inode)[1]
                     raise ValueError("One of index, path, or device_inode must be provided.")
             except KeyError:
                 return None
