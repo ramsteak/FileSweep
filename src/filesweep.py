@@ -323,7 +323,8 @@ def _add_new_files_th(iter: ThreadSafeIterator[IncompleteFileInfo], config: Conf
                     db.add_item(item)
                     log.info(f"Added file: {item.path} (size: {item.size}, modified: {item.modified}, hash: {item.file_hash})")
                 case "update":
-                    assert old_idx != -1
+                    if old_idx < 0:
+                        raise RuntimeError("Old index is -1, this should not happen.")
                     db.update_item(item, old_idx)
                     log.info(f"Updated file: {item.path} (size: {item.size}, modified: {item.modified}, hash: {item.file_hash})")
             
@@ -382,7 +383,9 @@ def check_db(config: Config, db: StatDB, decision_queue: Queue[Decision]):
         hash_decisions: dict[int, Decision] = {}
         for idx in idxs:
             file_info = db.get_item(index = idx)
-            assert file_info is not None
+            if file_info is None:
+                log.error(f"Error retrieving file info for index {idx}, skipping...")
+                continue
 
             # Get the directory config for this file as a dict, with config as key and
             # path depth as value.
@@ -523,7 +526,9 @@ def act_decisions(decision_queue: Queue[Decision], db: StatDB, dry_run: bool) ->
                     if dry_run:
                         log.info(f"Dry run: would update modified time of file {decision.file_info.path} to {decision.time}.")
                     else:
-                        assert decision.time is not None
+                        if decision.time is None:
+                            log.error(f"Retime action for file {decision.file_info.path} has no time set, skipping...")
+                            continue
                         utime(decision.file_info.path, ns=(decision.file_info.accessed, decision.time))
                         log.info(f"Updated modified time of file {decision.file_info.path} to {decision.time}.")
                 case Action.LINK:

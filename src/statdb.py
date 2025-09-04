@@ -248,9 +248,6 @@ class StatDB():
             else:
                 raise ValueError("Either index or path must be provided.")
             
-            assert finfo.file_hash is not None
-            assert finfo.first_16b is not None
-
             # Remove item from all indexes
             self._dirty = True
             self.file_info.pop(index)
@@ -363,8 +360,6 @@ class StatDB():
                     raise InvalidItemError("Cannot change path of existing item.")
 
             # Remove old indexes
-            assert old_info.file_hash is not None
-            assert old_info.first_16b is not None
             self.hash_index.remove(old_info.file_hash, idx)
             self.f16b_index.remove(old_info.first_16b, idx)
 
