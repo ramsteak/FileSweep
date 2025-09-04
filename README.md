@@ -1,7 +1,7 @@
 # FileSweep
 
 <p align="center">
-  <img src="./3f2995eb-b8c7-4929-a2d4-3bdab09fa6e2-crop.png" width="500px" alt="FileSweep screenshot" />
+  <img src="./img/logo.png" width="500px" alt="FileSweep screenshot" />
 </p>
 
 FileSweep is a cross-platform utility for managing duplicate and unwanted files in user directories. Designed to be run manually or scheduled via cron or Task Scheduler, it helps keep your file collections organized and free of duplicates and clutter.
