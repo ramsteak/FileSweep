@@ -1,0 +1,116 @@
+# Configuration file for FileSweep.
+
+# Directories to analyze and their priorities. If collisions occur, files in higher
+# priority directories are favored. Priority is indicated by a lower numerical value.
+# 0 is the highest priority. Files are checked based on their hash values.
+# Absolute paths are recommended.
+directories:
+  - path: "/home/user/Downloads"
+    # Set priority of the folder. The downloads folder has a low priority, as it
+    # quickly fills up with random files we may copy somewhere else.
+    priority: 10
+    # Do not scan subdirectories.
+    subdirs: false
+    # Policy options are as such:
+    #  - "keep"     : never delete files in the directory
+    #  - "prompt"   : ask before deleting (NOT IMPLEMENTED YET)
+    #  - "hardlink" : replace low priority duplicates with hardlinks to highest priority file (NOT IMPLEMENTED YET)
+    #  - "trash"    : move matching duplicates to recycle bin/trash, ensuring at least one copy remains.
+    #  - "delete"   : delete duplicates. Keeps highest priority file across folders, ensuring at least one copy remains.
+    #  - "discard!" : move matching files (NOT ONLY DUPLICATES) to recycle bin/trash.
+    #  - "erase!"   : delete matching files (NOT ONLY DUPLICATES). Useful to remove old files that take space.
+    policy: "trash"
+    # Within this directory, when collisions occur, keep the oldest file. This file
+    # gets its modified date updated to the most recent date, so it appears at the
+    # top of the list in file explorers.
+    rename: true
+  - path: "/home/user/Downloads"
+    # More restrictive pattern to match only very old files
+    priority: 10
+    subdirs: false
+    # Files matching this pattern will be trashed, regardless of whether they are duplicates or not.
+    policy: "discard!"
+    # The pattern matches files older than 4 years (4y).
+    pattern: ([4y..])
+  - path: "/home/user/Documents"
+    priority: 5
+    subdirs: true
+    policy: "keep"
+    skip_subdirs:
+     - ".venv"
+
+# File types to include in the duplicate check.
+# If no match: block is specified, all files are included.
+# The program will check all included files, and then exclude them based on the rules.
+# Both exclude and include rules can be based on:
+# - filename (e.g., ".tmp" to exclude all .tmp files)
+# - size (in bytes)
+# - modification date (in days)
+# Patterns can be specified also on a directory basis in the `directories` section above.
+# Directory-specific rules are written as pattern, instead of match tree, and they can
+# only exclude files (they cannot include files excluded by global rules).
+# 
+# Patterns are described by a string, consisting of:
+# filename patterns: ["name1.ext"]
+# extension patterns: [".ext"]
+# regex patterns: [/regex/]
+# size patterns: [min..max] where min and max are sizes with units (B, KB, MB, GB, TB)
+# age patterns: [min..max] where min and max are ages with units (y, mo, w, d, h, m, s), supports multiple if in order
+#
+# Patterns can be combined and negated with &, | and !
+# Examples:
+#   - !([.tmp]|[.part]) : exclude files with .tmp or .part
+#   - ([1MB..]|[.jpg]|[.png]) : include files larger than 1MB or with .jpg or .png extensions
+#   - [1MB..10MB]&([.jpg]|[.png]) : include only files between 1MB and 10MB with .jpg or .png extensions
+#
+# Within a () block, all conditions must be the same (& or |).
+# To combine different conditions, use multiple () blocks.
+
+match:
+  include:
+    name:
+      - ".*" # Include all files by default
+    size:
+      min: 10B # Minimum file size
+      # max: 10GB # Maximum file size
+    modified:
+      min: 0d # Minimum age of file
+      max: null # Maximum age of file
+
+  exclude:
+    name:
+    # Select based on the filename
+      # String starting with . excludes by extension
+      - .tmp # Temporary files
+      - .part # Partially downloaded files
+      - .crdownload # Chrome partial downloads
+      - .log # Log files
+      - .bak # Backup files
+      - .ds_store # macOS system files
+      - .ini # Configuration files
+      - .lnk # Windows shortcuts
+      - .db # Database files
+    # Can exclude by full name
+      - thumbs.db # Windows thumbnail cache
+    # Or regex (starts with / and ends with /)
+      - /^~\\$/ # Temporary Office files starting with ~$
+
+# Logging configuration
+logging:
+  level: INFO # Options: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  file: ~/.filesweep/filesweep.log # Log file path
+
+# Performance settings
+performance:
+  algorithm: "sha256" # Hashing algorithm to use (options are defined by hashlib)
+  # [sha1, md5, sha256, sha224, sha512, sha384, blake2b, blake2s, sha3_224, sha3_256, sha3_384, sha3_512, shake_128, shake_256, python, py]
+  # python and py refer to the built-in hash function (not cryptographic)
+  max_read: null # If > 0, only hash the first N bytes of each file (0 means hash entire file)
+  max_threads: 4 # Maximum number of threads to use for discovering and hashing files. Default is 1.
+  chunk_size: 8KB # Size of chunks to read files in bytes
+  small_file_size: 1MB # Files smaller than this are hashed first to check for duplicates. Larger files are hashed only if necessary.
+
+general:
+  follow_symlinks: false # Whether to follow symbolic links
+  dry_run: true # If true, no files will be deleted; actions will be logged only
+  cache_file: ~/.filesweep/filesweep.cache # Path to cache file for storing file hashes
