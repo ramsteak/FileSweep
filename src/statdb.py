@@ -208,6 +208,9 @@ class StatDB():
         self.hash_index[finfo.file_hash] = idx # type: ignore
         self.f16b_index[finfo.first_16b] = idx # type: ignore
         self.dvin_index[finfo.device, finfo.inode] = idx
+
+        self.hash_index.add(finfo.file_hash, idx)
+        self.f16b_index.add(finfo.first_16b, idx)
     
         return idx
 
