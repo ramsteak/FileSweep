@@ -205,8 +205,6 @@ class StatDB():
 
         self.file_info[idx] = finfo
         self.path_index[finfo.path] = idx
-        self.hash_index[finfo.file_hash] = idx # type: ignore
-        self.f16b_index[finfo.first_16b] = idx # type: ignore
         self.dvin_index[finfo.device, finfo.inode] = idx
 
         self.hash_index.add(finfo.file_hash, idx)
@@ -234,7 +232,7 @@ class StatDB():
     def pop_item(self, *, path: Path) -> FileInfo: ...
     @overload
     def pop_item(self, *, device_inode: tuple[int,int]) -> FileInfo: ...
-    def pop_item(self, *, index: int | ellipsis = ..., path: Path | ellipsis = ..., device_inode: tuple[int,int] | ellipsis = ...) -> FileInfo: # type: ignore
+    def pop_item(self, *, index: int | ellipsis = ..., path: Path | ellipsis = ..., device_inode: tuple[int,int] | ellipsis = ...) -> FileInfo:
         with self._lock:
             if index is not ...:
                 if index not in self.file_info:
@@ -266,7 +264,7 @@ class StatDB():
     def _get_item(self, *, path: Path) -> tuple[int, FileInfo]: ...
     @overload
     def _get_item(self, *, device_inode: tuple[int,int]) -> tuple[int, FileInfo]: ...
-    def _get_item(self, *, index: int | ellipsis = ..., path: Path | ellipsis = ..., device_inode: tuple[int,int] | ellipsis = ...) -> tuple[int, FileInfo]: # type: ignore
+    def _get_item(self, *, index: int | ellipsis = ..., path: Path | ellipsis = ..., device_inode: tuple[int,int] | ellipsis = ...) -> tuple[int, FileInfo]:
         # Assumes either index or path is valid and exists. Raises KeyError if not.
         if index is not ...:
             return index, self.file_info[index]
@@ -292,7 +290,7 @@ class StatDB():
     @overload
     def get_item(self, *, device_inode: tuple[int,int], return_index: Literal[True]) -> tuple[int, FileInfo] | None: ...
 
-    def get_item(self, *, index: int|ellipsis = ..., path: Path|ellipsis = ..., device_inode: tuple[int,int]|ellipsis = ..., return_index:bool=False) -> FileInfo | tuple[int, FileInfo] | None: # type: ignore
+    def get_item(self, *, index: int|ellipsis = ..., path: Path|ellipsis = ..., device_inode: tuple[int,int]|ellipsis = ..., return_index:bool=False) -> FileInfo | tuple[int, FileInfo] | None:
         # Wraps _get_item and returns None if not found.
         with self._lock:
             try:
@@ -315,7 +313,7 @@ class StatDB():
             except KeyError:
                 return None
     
-    def get_items(self, *, index: int|ellipsis = ..., path: Path|ellipsis = ..., file_hash: str|ellipsis = ..., first_16b: str|ellipsis = ...) -> list[FileInfo]: # type: ignore
+    def get_items(self, *, index: int|ellipsis = ..., path: Path|ellipsis = ..., file_hash: str|ellipsis = ..., first_16b: str|ellipsis = ...) -> list[FileInfo]:
         with self._lock:
             if index is not ...:
                 try:
