@@ -599,7 +599,9 @@ def main(config: Config, db: StatDB):
     else:
         log.info(f"Total space saved: {human_size(saved_space)}")
 
-if __name__ == "__main__":
+def run() -> None:
+    # Entry point for the application
+    
     config_file = find_config_file()
     config, db = init(config_file)
     # Catch SIGINT and SIGTERM to save the database before exiting
@@ -614,3 +616,6 @@ if __name__ == "__main__":
     finally:
         log.info("Saving database...")
         db.save()
+
+if __name__ == '__main__':
+    run()
