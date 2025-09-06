@@ -4,9 +4,9 @@ import yaml
 from pathlib import Path
 from typing import Any, TypeVar, Sequence
 
-from .classes import Config, AnyPattern, Pattern, NamePattern, SizePattern, DatePattern, DirectoryConfig, LoggingConfig, PerformanceConfig, GeneralConfig, IncompleteFileInfo
-from .misc import parse_time, parse_size, SIZE_RE_STR, TIME_RE_STR
-from .policy import Policy
+from filesweep.config.classes import Config, AnyPattern, Pattern, NamePattern, SizePattern, DatePattern, DirectoryConfig, LoggingConfig, PerformanceConfig, GeneralConfig, IncompleteFileInfo
+from filesweep.config.misc import parse_time, parse_size, SIZE_RE_STR, TIME_RE_STR
+from filesweep.config.policy import Policy
 
 _K = TypeVar('_K')
 _V = TypeVar('_V')

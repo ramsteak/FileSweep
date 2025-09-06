@@ -17,13 +17,13 @@ from typing import Iterable
 # As of now, hardlinks are not supported. The database treats paths as unique identifiers.
 # If a file is hardlinked in multiple locations, it will result in file collisions. 
 
-from . import __version__
-from .config import load_config, Config, policy_priority, Policy, human_size
-from .config.classes import LoggingConfig, FileInfo, DirectoryConfig, IncompleteFileInfo
-from .config.load import read_file_info
-from .hasher import hash_file, read_16b
-from .statdb import StatDB
-from .threadsafe import ThreadSafeIterator, ThreadSafeSet
+from filesweep import __version__
+from filesweep.config import load_config, Config, policy_priority, Policy, human_size
+from filesweep.config.classes import LoggingConfig, FileInfo, DirectoryConfig, IncompleteFileInfo
+from filesweep.config.load import read_file_info
+from filesweep.hasher import hash_file, read_16b
+from filesweep.statdb import StatDB
+from filesweep.threadsafe import ThreadSafeIterator, ThreadSafeSet
 
 @total_ordering
 class Action(Enum):

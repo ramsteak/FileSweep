@@ -3,8 +3,8 @@ import re
 from pathlib import Path
 from typing import NamedTuple, Literal
 
-from .misc import human_size, human_time
-from .policy import Policy
+from filesweep.config.misc import human_size, human_time
+from filesweep.config.policy import Policy
 
 class FileInfo(NamedTuple):
     path: Path

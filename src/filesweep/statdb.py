@@ -7,7 +7,7 @@ from pathlib import Path
 from threading import Lock
 from typing import Generic, TypeVar, Collection, Iterable, overload, Literal, TypedDict
 
-from .config.classes import FileInfo
+from filesweep.config.classes import FileInfo
 
 def _ser_fileinfo(f: FileInfo) -> dict[str, str|int|None]:
     return {
